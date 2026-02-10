@@ -14,6 +14,19 @@ A Python script that sends Discord notifications for Options Expiration (OPEX) d
   - D-1 alerts (day before at 16:00 ET)
   - D-0 alerts (day of at 09:30 ET)
 
+## 🧪 Quick Test
+
+To verify your Discord webhook is working:
+
+1. Go to [Actions](https://github.com/JadoSZ/discord-opex-2026-alerts/actions)
+2. Click **"Test Discord Webhook"**
+3. Click **"Run workflow"** → **"Run workflow"**
+4. Check your Discord channel - you should see a **green test message** immediately!
+
+This test works regardless of the current date and will always send a message.
+
+---
+
 ## Installation
 
 1. Clone this repository:
