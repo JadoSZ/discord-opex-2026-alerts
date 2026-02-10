@@ -157,6 +157,31 @@ This repository includes automated workflows that run on schedule:
 
 **Note**: The workflows only send alerts when conditions are met (e.g., OPEX is coming up), so they won't spam your channel.
 
+## Testing the Alerts
+
+You can test the alerts manually without waiting for scheduled times:
+
+### Test Individual Alerts
+
+1. Go to [Actions](https://github.com/JadoSZ/discord-opex-2026-alerts/actions)
+2. Select the workflow you want to test:
+   - **Weekly Preview** - Sunday preview alert
+   - **D-1 Alert** - Day before alert
+   - **D-0 Alert** - Day of OPEX alert
+3. Click "Run workflow" dropdown
+4. Click "Run workflow" button
+5. Check your Discord channel for the alert
+
+### Test All Alerts at Once
+
+1. Go to [Actions](https://github.com/JadoSZ/discord-opex-2026-alerts/actions)
+2. Select "Test All Alerts" workflow
+3. Click "Run workflow" dropdown
+4. Click "Run workflow" button
+5. All three alert types will be sent in sequence (15 seconds total)
+
+**Note:** The test workflow uses current dates, so alerts may say "No upcoming OPEX" depending on when you run it.
+
 ### Manual Scheduling
 
 You can also automate this script to run on a schedule using:

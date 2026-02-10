@@ -1,0 +1,54 @@
+name: Test All Alerts
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-all-alerts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: 📅 Test Weekly Preview
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          echo "Testing Weekly Preview Alert..."
+          python opex_alerts.py --alert-type weekly
+          sleep 5
+      
+      - name: ⚠️ Test D-1 Alert
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          echo "Testing D-1 Alert..."
+          python opex_alerts.py --alert-type d1
+          sleep 5
+      
+      - name: 🚨 Test D-0 Alert
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          echo "Testing D-0 Alert..."
+          python opex_alerts.py --alert-type d0
+      
+      - name: ✅ Test Complete
+        if: always()
+        run: |
+          echo "✅ All alerts sent successfully!"
+          echo "Check your Discord channel for three test messages."
