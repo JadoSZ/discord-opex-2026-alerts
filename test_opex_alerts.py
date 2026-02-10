@@ -77,16 +77,44 @@ class TestOPEXCalculator(unittest.TestCase):
     
     def test_get_next_opex_with_future_dates(self):
         """Test getting next OPEX when dates are in the future."""
-        # Create some test dates
+        # Create some test dates in the far future
         test_dates = [
-            datetime(2026, 1, 16),
-            datetime(2026, 2, 20),
-            datetime(2026, 3, 20),
+            datetime(2027, 1, 15),
+            datetime(2027, 2, 19),
+            datetime(2027, 3, 19),
         ]
         
         next_opex = get_next_opex(test_dates)
-        # Should return the first date if we're before 2026
+        # Should return the first date if all are in the future
         self.assertIsNotNone(next_opex)
+        self.assertEqual(next_opex, test_dates[0])
+    
+    def test_get_next_opex_with_mixed_dates(self):
+        """Test getting next OPEX with some past and some future dates."""
+        # Create dates with some in past and some in future
+        test_dates = [
+            datetime(2020, 1, 17),  # Past
+            datetime(2027, 2, 19),  # Future
+            datetime(2027, 3, 19),  # Future
+        ]
+        
+        next_opex = get_next_opex(test_dates)
+        # Should return the first future date
+        self.assertIsNotNone(next_opex)
+        self.assertEqual(next_opex, test_dates[1])
+    
+    def test_get_next_opex_with_past_dates(self):
+        """Test getting next OPEX when all dates are in the past."""
+        # Create dates in the past
+        test_dates = [
+            datetime(2020, 1, 17),
+            datetime(2020, 2, 21),
+            datetime(2020, 3, 20),
+        ]
+        
+        next_opex = get_next_opex(test_dates)
+        # Should return None when all dates have passed
+        self.assertIsNone(next_opex)
 
 
 class TestDiscordWebhook(unittest.TestCase):
