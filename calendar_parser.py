@@ -47,6 +47,7 @@ class OPEXCalendarParser:
         Common patterns: MM/DD/YYYY, Month DD YYYY, etc.
         """
         dates = []
+        current_year = datetime.now().year
         
         # Pattern 1: MM/DD/YYYY
         pattern1 = r'\b(\d{1,2})/(\d{1,2})/(\d{4})\b'
@@ -54,7 +55,8 @@ class OPEXCalendarParser:
         for match in matches1:
             try:
                 date = datetime(int(match[2]), int(match[0]), int(match[1]))
-                if date.year == 2026:  # Filter for 2026
+                # Accept dates from current year and beyond
+                if date.year >= current_year:
                     dates.append(date)
             except ValueError:
                 continue
@@ -65,7 +67,8 @@ class OPEXCalendarParser:
         for match in matches2:
             try:
                 date = datetime.strptime(f"{match[0]} {match[1]} {match[2]}", "%B %d %Y")
-                if date.year == 2026:
+                # Accept dates from current year and beyond
+                if date.year >= current_year:
                     dates.append(date)
             except ValueError:
                 continue
