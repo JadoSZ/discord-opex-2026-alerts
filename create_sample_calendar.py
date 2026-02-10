@@ -9,18 +9,18 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib import colors
 from datetime import datetime
 
-
 def create_sample_opex_calendar():
     """Create a sample OPEX calendar PDF for 2026"""
     
     # Standard OPEX dates for 2026 (Third Friday of each month)
+    # Note: June 18 is Thursday due to Juneteenth holiday on June 19
     opex_dates_2026 = [
         "January 16, 2026",
         "February 20, 2026",
         "March 20, 2026",
         "April 17, 2026",
         "May 15, 2026",
-        "June 19, 2026",
+        "June 18, 2026",
         "July 17, 2026",
         "August 21, 2026",
         "September 18, 2026",
@@ -45,7 +45,7 @@ def create_sample_opex_calendar():
     story.append(Spacer(1, 20))
     
     # Create table data
-    data = [['Month', 'OPEX Date']]
+    data = [["Month", "OPEX Date"]]
     for date_str in opex_dates_2026:
         date_obj = datetime.strptime(date_str, "%B %d, %Y")
         month = date_obj.strftime("%B")
