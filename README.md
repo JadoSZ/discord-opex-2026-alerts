@@ -1,204 +1,96 @@
-# Discord OPEX 2026 Alerts Bot
+# Discord OPEX 2026 Alerts
 
-An automated Discord bot that sends timely alerts for Options Expiration (OPEX) events. The bot reads OPEX dates from a PDF calendar and sends scheduled alerts to your Discord channel.
+A Python script that sends Discord notifications for Options Expiration (OPEX) dates in 2026. OPEX occurs on the third Friday of each month, and this tool helps traders and investors stay informed about upcoming expiration dates.
 
 ## Features
 
-- **D-1 Alerts**: Automatically sends alerts one day before OPEX at 16:00 PM Eastern Time
-- **D-0 Alerts**: Automatically sends alerts on OPEX day at 09:00 AM Eastern Time
-- **Weekly Previews**: Every Sunday at 18:00 PM Eastern, sends a preview of upcoming OPEX events for the week (only if events exist)
-- **PDF Calendar Parsing**: Extracts OPEX dates from PDF calendar files
-- **Discord Commands**: Interactive commands to check next OPEX date and list all dates
+- 📅 Calculates all OPEX dates for 2026 (third Friday of each month)
+- 🔔 Sends Discord alerts for upcoming OPEX dates
+- 📊 Displays a full OPEX calendar for the year
+- ⏰ Shows days remaining until next OPEX
+- 🎨 Rich embed formatting with color-coded alerts
 
-## Setup Instructions
+## Installation
 
-### 1. Prerequisites
+1. Clone this repository:
+```bash
+git clone https://github.com/JadoSZ/discord-opex-2026-alerts.git
+cd discord-opex-2026-alerts
+```
 
-- Python 3.8 or higher
-- A Discord bot token (see below)
-- A Discord server where you have admin permissions
-
-### 2. Create a Discord Bot
-
-1. Go to [Discord Developer Portal](https://discord.com/developers/applications)
-2. Click "New Application" and give it a name
-3. Go to the "Bot" section and click "Add Bot"
-4. Under "Privileged Gateway Intents", enable:
-   - MESSAGE CONTENT INTENT
-   - SERVER MEMBERS INTENT (optional)
-5. Copy the bot token (you'll need this later)
-6. Go to "OAuth2" > "URL Generator"
-7. Select scopes: `bot`
-8. Select bot permissions: `Send Messages`, `Embed Links`, `Read Message History`
-9. Copy the generated URL and open it in your browser to invite the bot to your server
-
-### 3. Get Your Channel ID
-
-1. In Discord, go to User Settings > Advanced
-2. Enable "Developer Mode"
-3. Right-click on your desired alert channel
-4. Click "Copy ID"
-
-### 4. Install Dependencies
-
+2. Install required dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Configure Environment Variables
+3. Set up your Discord webhook:
+   - Go to your Discord server settings
+   - Navigate to Integrations → Webhooks
+   - Create a new webhook or copy an existing webhook URL
+   - Copy the `.env.example` file to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+   - Edit `.env` and add your webhook URL:
+   ```
+   DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/your_webhook_id/your_webhook_token
+   ```
 
-1. Copy the example environment file:
-```bash
-cp .env.example .env
-```
+## Usage
 
-2. Edit `.env` and fill in your values:
-```
-DISCORD_TOKEN=your_actual_bot_token_here
-CHANNEL_ID=your_actual_channel_id_here
-CALENDAR_PDF_PATH=opex_calendar.pdf
-```
-
-### 6. Prepare Your OPEX Calendar
-
-You have two options:
-
-#### Option A: Use the Sample Calendar
-Generate a sample 2026 OPEX calendar:
-```bash
-python create_sample_calendar.py
-```
-
-This creates `opex_calendar.pdf` with standard monthly OPEX dates (third Friday of each month).
-
-#### Option B: Use Your Own PDF Calendar
-Place your OPEX calendar PDF file in the project directory and update the `CALENDAR_PDF_PATH` in `.env`
-
-The PDF should contain dates in one of these formats:
-- MM/DD/YYYY (e.g., 01/16/2026)
-- Month DD, YYYY (e.g., January 16, 2026)
-
-### 7. Run the Bot
+Run the script to send OPEX alerts to your Discord channel:
 
 ```bash
-python bot.py
+python opex_alerts.py
 ```
 
-The bot will:
-- Connect to Discord
-- Parse the OPEX calendar
-- Start scheduled alert tasks
-- Begin monitoring for alert times
+This will:
+1. Send a complete OPEX calendar for 2026 showing all 12 expiration dates
+2. Send an alert for the next upcoming OPEX date with days remaining
 
-## Alert Schedule
+## OPEX Dates for 2026
 
-| Alert Type | Time (Eastern) | Description |
-|------------|----------------|-------------|
-| D-1 Alert | 16:00 PM (4:00 PM) | One day before OPEX |
-| D-0 Alert | 09:00 AM (9:00 AM) | Morning of OPEX day |
-| Weekly Preview | Sunday 18:00 PM (6:00 PM) | Preview of upcoming week's events |
+The script automatically calculates the third Friday of each month:
 
-## Bot Commands
+- January 16, 2026
+- February 20, 2026
+- March 20, 2026
+- April 17, 2026
+- May 15, 2026
+- June 19, 2026
+- July 17, 2026
+- August 21, 2026
+- September 18, 2026
+- October 16, 2026
+- November 20, 2026
+- December 18, 2026
 
-Use these commands in your Discord server:
+## Automation
 
-- `!nextopex` - Shows the next upcoming OPEX date
-- `!listopex` - Lists all OPEX dates from the calendar
-- `!reload` - (Admin only) Reloads the calendar from the PDF file
+You can automate this script to run on a schedule using:
 
-## Project Structure
-
-```
-discord-opex-2026-alerts/
-├── bot.py                      # Main bot application
-├── calendar_parser.py          # PDF calendar parsing logic
-├── create_sample_calendar.py   # Script to generate sample calendar
-├── requirements.txt            # Python dependencies
-├── .env.example                # Environment variables template
-├── .gitignore                  # Git ignore rules
-└── README.md                   # This file
-```
-
-## Deployment
-
-### Running 24/7
-
-For production use, consider these options:
-
-#### Option 1: Cloud Hosting
-- Deploy to services like Heroku, Railway, or Google Cloud Run
-- Ensure the service stays running 24/7
-
-#### Option 2: VPS/Server
-- Run on a VPS (DigitalOcean, Linode, AWS EC2)
-- Use a process manager like `systemd` or `pm2`
-
-#### Option 3: Container
-- Use Docker to containerize the bot
-- Deploy to Kubernetes or Docker Swarm
-
-### Using systemd (Linux)
-
-Create a service file at `/etc/systemd/system/opex-bot.service`:
-
-```ini
-[Unit]
-Description=Discord OPEX Alerts Bot
-After=network.target
-
-[Service]
-Type=simple
-User=your_user
-WorkingDirectory=/path/to/discord-opex-2026-alerts
-ExecStart=/usr/bin/python3 bot.py
-Restart=always
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Then:
+### Cron (Linux/Mac)
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable opex-bot
-sudo systemctl start opex-bot
+# Run every day at 9 AM
+0 9 * * * cd /path/to/discord-opex-2026-alerts && python opex_alerts.py
 ```
 
-## Troubleshooting
+### Task Scheduler (Windows)
+Create a scheduled task to run `python opex_alerts.py` at your desired frequency.
 
-### Bot doesn't connect
-- Verify your `DISCORD_TOKEN` is correct
-- Ensure the bot is invited to your server with proper permissions
+### GitHub Actions
+You can also set up GitHub Actions to run this on a schedule. See `.github/workflows/` directory for examples.
 
-### No alerts being sent
-- Check that `CHANNEL_ID` is correct
-- Verify the bot has permissions to send messages in the channel
-- Check the calendar was parsed successfully (look at logs)
+## Requirements
 
-### Calendar not parsing correctly
-- Ensure your PDF contains dates in supported formats
-- Check the logs for parsing errors
-- Try the sample calendar first to verify setup
+- Python 3.7+
+- `requests` library for HTTP requests
+- `python-dotenv` for environment variable management
 
-## Customization
+## Contributing
 
-### Changing Alert Times
-Edit the time checks in `bot.py`:
-- D-1 alerts: Modify line with `if now.hour == 16 and now.minute == 0:`
-- D-0 alerts: Modify line with `if now.hour == 9 and now.minute == 0:`
-- Weekly preview: Modify line with `if now.weekday() == 6 and now.hour == 18 and now.minute == 0:`
-
-### Changing Alert Messages
-Customize the embed messages in the respective functions:
-- `d_minus_1_alert()`
-- `d_0_alert()`
-- `weekly_preview()`
+Feel free to open issues or submit pull requests for improvements!
 
 ## License
 
-MIT License - feel free to modify and use as needed.
-
-## Support
-
-For issues or questions, please open an issue on GitHub.
+MIT License - feel free to use this for your trading and investment activities.
