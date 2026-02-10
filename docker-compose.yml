@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  opex-bot:
+    build: .
+    container_name: discord-opex-bot
+    restart: unless-stopped
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - CHANNEL_ID=${CHANNEL_ID}
+      - CALENDAR_PDF_PATH=opex_calendar.pdf
+    volumes:
+      - ./opex_calendar.pdf:/app/opex_calendar.pdf
