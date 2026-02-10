@@ -219,7 +219,7 @@ class DiscordWebhook:
                 },
                 {
                     "name": "⏰ Time Until Expiration",
-                    "value": "Market closes in ~24 hours until expiration",
+                    "value": "Expiration in ~24 hours at market close",
                     "inline": False
                 }
             ],
@@ -286,7 +286,7 @@ def get_next_opex(opex_dates: List[datetime]) -> Optional[datetime]:
 
 def check_opex_in_week(opex_dates: List[datetime]) -> Optional[datetime]:
     """
-    Check if there's an OPEX date in the next 7 days.
+    Check if there's an OPEX date in the next 7 days (including today).
     
     Args:
         opex_dates: List of OPEX dates
