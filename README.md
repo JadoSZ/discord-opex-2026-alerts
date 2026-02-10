@@ -9,6 +9,10 @@ A Python script that sends Discord notifications for Options Expiration (OPEX) d
 - 📊 Displays a full OPEX calendar for the year
 - ⏰ Shows days remaining until next OPEX
 - 🎨 Rich embed formatting with color-coded alerts
+- 🤖 **Automated alerts via GitHub Actions**
+  - Weekly preview (Sundays at 18:00 ET)
+  - D-1 alerts (day before at 16:00 ET)
+  - D-0 alerts (day of at 09:30 ET)
 
 ## Installation
 
@@ -38,15 +42,67 @@ pip install -r requirements.txt
 
 ## Usage
 
+### Manual Execution
+
 Run the script to send OPEX alerts to your Discord channel:
 
 ```bash
+# Send full calendar (default)
 python opex_alerts.py
+
+# Send weekly preview (only if OPEX in next 7 days)
+python opex_alerts.py --alert-type weekly
+
+# Send D-1 alert (only if tomorrow is OPEX)
+python opex_alerts.py --alert-type d1
+
+# Send D-0 alert (only if today is OPEX)
+python opex_alerts.py --alert-type d0
+```
+
+### Test Webhook
+
+Test your Discord webhook connection:
+
+```bash
+# Using environment variable from .env
+python test_webhook.py
+
+# Using command line argument
+python test_webhook.py https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_TOKEN
 ```
 
 This will:
 1. Send a complete OPEX calendar for 2026 showing all 12 expiration dates
 2. Send an alert for the next upcoming OPEX date with days remaining
+
+## Alert Types
+
+The system supports different alert types with distinct messaging and colors:
+
+### Weekly Preview (Blue - Informational)
+```
+📅 OPEX Week Preview
+Next OPEX: January 16, 2026
+⏰ 5 days remaining
+Get ready for next Friday's expiration!
+```
+
+### D-1 Alert (Orange - Warning)
+```
+⚠️ OPEX TOMORROW!
+Date: January 16, 2026
+Time to review your positions
+Market closes in ~24 hours until expiration
+```
+
+### D-0 Alert (Red - Urgent)
+```
+🚨 TODAY IS OPEX!
+Date: January 16, 2026
+Market is NOW OPEN
+Options expire at market close (4:00 PM ET)
+```
 
 ## OPEX Dates for 2026
 
@@ -67,19 +123,52 @@ The script automatically calculates the third Friday of each month:
 
 ## Automation
 
-You can automate this script to run on a schedule using:
+### GitHub Actions (Recommended)
 
-### Cron (Linux/Mac)
+This repository includes automated workflows that run on schedule:
+
+#### 1. Weekly Preview Alert
+- **Schedule**: Every Sunday at 18:00 PM Eastern (22:00 UTC)
+- **Behavior**: Only sends if there's an OPEX date in the next 7 days
+- **Message**: Blue informational alert with days remaining
+- **Workflow**: `.github/workflows/weekly-preview.yml`
+
+#### 2. D-1 Alert (Day Before)
+- **Schedule**: Daily at 16:00 PM Eastern (20:00 UTC)
+- **Behavior**: Only sends if tomorrow is an OPEX date
+- **Message**: Orange warning alert with preparation reminder
+- **Workflow**: `.github/workflows/d1-alert.yml`
+
+#### 3. D-0 Alert (Day Of)
+- **Schedule**: Daily at 09:30 AM Eastern (13:30 UTC)
+- **Behavior**: Only sends if today is an OPEX date
+- **Message**: Red urgent alert with market open notification
+- **Workflow**: `.github/workflows/d0-alert.yml`
+
+#### Setup GitHub Actions
+
+1. Fork this repository to your own GitHub account
+2. Go to your repository Settings → Secrets and variables → Actions
+3. Add a new repository secret:
+   - Name: `DISCORD_WEBHOOK_URL`
+   - Value: Your Discord webhook URL
+4. The workflows will run automatically on schedule
+5. You can also trigger them manually from the Actions tab
+
+**Note**: The workflows only send alerts when conditions are met (e.g., OPEX is coming up), so they won't spam your channel.
+
+### Manual Scheduling
+
+You can also automate this script to run on a schedule using:
+
+#### Cron (Linux/Mac)
 ```bash
 # Run every day at 9 AM
 0 9 * * * cd /path/to/discord-opex-2026-alerts && python opex_alerts.py
 ```
 
-### Task Scheduler (Windows)
+#### Task Scheduler (Windows)
 Create a scheduled task to run `python opex_alerts.py` at your desired frequency.
-
-### GitHub Actions
-You can also set up GitHub Actions to run this on a schedule. See `.github/workflows/` directory for examples.
 
 ## Requirements
 
