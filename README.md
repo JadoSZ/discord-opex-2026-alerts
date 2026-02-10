@@ -178,7 +178,7 @@ You can test the alerts manually without waiting for scheduled times:
 2. Select "Test All Alerts" workflow
 3. Click "Run workflow" dropdown
 4. Click "Run workflow" button
-5. All three alert types will be sent in sequence (15 seconds total)
+5. All three alert types will be sent in sequence (10 seconds total)
 
 **Note:** The test workflow uses current dates, so alerts may say "No upcoming OPEX" depending on when you run it.
 

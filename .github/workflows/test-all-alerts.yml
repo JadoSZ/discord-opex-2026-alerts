@@ -50,5 +50,5 @@ jobs:
       - name: ✅ Test Complete
         if: always()
         run: |
-          echo "✅ All alerts sent successfully!"
-          echo "Check your Discord channel for three test messages."
+          echo "✅ All alert tests completed!"
+          echo "Check your Discord channel for the test messages."
