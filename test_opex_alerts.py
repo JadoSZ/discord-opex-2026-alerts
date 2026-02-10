@@ -115,6 +115,99 @@ class TestOPEXCalculator(unittest.TestCase):
         next_opex = get_next_opex(test_dates)
         # Should return None when all dates have passed
         self.assertIsNone(next_opex)
+    
+    def test_check_opex_in_week_with_upcoming(self):
+        """Test checking for OPEX in next 7 days when one exists."""
+        from opex_alerts import check_opex_in_week
+        from datetime import timedelta
+        
+        # Create dates with one in 5 days
+        today = datetime.now()
+        test_dates = [
+            today + timedelta(days=5),
+            today + timedelta(days=15),
+            today + timedelta(days=25),
+        ]
+        
+        opex_in_week = check_opex_in_week(test_dates)
+        self.assertIsNotNone(opex_in_week)
+        self.assertEqual(opex_in_week, test_dates[0])
+    
+    def test_check_opex_in_week_with_none(self):
+        """Test checking for OPEX in next 7 days when none exists."""
+        from opex_alerts import check_opex_in_week
+        from datetime import timedelta
+        
+        # Create dates all beyond 7 days
+        today = datetime.now()
+        test_dates = [
+            today + timedelta(days=15),
+            today + timedelta(days=25),
+            today + timedelta(days=35),
+        ]
+        
+        opex_in_week = check_opex_in_week(test_dates)
+        self.assertIsNone(opex_in_week)
+    
+    def test_check_opex_tomorrow_with_match(self):
+        """Test checking if tomorrow is OPEX when it is."""
+        from opex_alerts import check_opex_tomorrow
+        from datetime import timedelta
+        
+        # Create date for tomorrow
+        tomorrow = datetime.now() + timedelta(days=1)
+        test_dates = [
+            tomorrow,
+            datetime.now() + timedelta(days=5),
+        ]
+        
+        opex_tomorrow = check_opex_tomorrow(test_dates)
+        self.assertIsNotNone(opex_tomorrow)
+        self.assertEqual(opex_tomorrow.date(), tomorrow.date())
+    
+    def test_check_opex_tomorrow_with_no_match(self):
+        """Test checking if tomorrow is OPEX when it's not."""
+        from opex_alerts import check_opex_tomorrow
+        from datetime import timedelta
+        
+        # Create dates that don't include tomorrow
+        test_dates = [
+            datetime.now() + timedelta(days=5),
+            datetime.now() + timedelta(days=15),
+        ]
+        
+        opex_tomorrow = check_opex_tomorrow(test_dates)
+        self.assertIsNone(opex_tomorrow)
+    
+    def test_check_opex_today_with_match(self):
+        """Test checking if today is OPEX when it is."""
+        from opex_alerts import check_opex_today
+        from datetime import timedelta
+        
+        # Create date for today
+        today = datetime.now()
+        test_dates = [
+            today,
+            datetime.now() + timedelta(days=5),
+        ]
+        
+        opex_today = check_opex_today(test_dates)
+        self.assertIsNotNone(opex_today)
+        self.assertEqual(opex_today.date(), today.date())
+    
+    def test_check_opex_today_with_no_match(self):
+        """Test checking if today is OPEX when it's not."""
+        from opex_alerts import check_opex_today
+        from datetime import timedelta
+        
+        # Create dates that don't include today
+        test_dates = [
+            datetime.now() + timedelta(days=5),
+            datetime.now() + timedelta(days=15),
+        ]
+        
+        opex_today = check_opex_today(test_dates)
+        self.assertIsNone(opex_today)
 
 
 class TestDiscordWebhook(unittest.TestCase):
