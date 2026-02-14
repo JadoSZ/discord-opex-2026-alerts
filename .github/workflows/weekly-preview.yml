@@ -31,7 +31,7 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          python opex_alerts.py --alert-type weekly
+          python opex_alerts.py --alert-type weekly --frequency medium
       
       - name: Log completion
         if: always()
