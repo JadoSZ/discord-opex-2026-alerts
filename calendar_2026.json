@@ -340,12 +340,11 @@
       ]
     },
     "high": {
-      "description": "All events including VIX Weeklys",
+      "description": "All events including AM-settled last trading days",
       "includes": [
         "standard_expirations",
         "am_settled_last_trading_days",
         "vix_standard_expirations",
-        "vix_weeklys",
         "end_of_month_quarter",
         "leaps_additions",
         "exchange_holidays"

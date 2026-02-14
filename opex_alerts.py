@@ -11,6 +11,7 @@ import sys
 import argparse
 import requests
 import json
+import time
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 from dotenv import load_dotenv
@@ -901,7 +902,6 @@ def main():
                     print(f"✗ Failed to send test alert for {event_type}")
                 
                 # Small delay between messages
-                import time
                 time.sleep(2)
     
     else:  # calendar
