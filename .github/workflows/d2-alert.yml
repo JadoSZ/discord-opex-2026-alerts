@@ -1,13 +1,13 @@
-name: D-1 OPEX Alert
+name: D-2 OPEX Alert
 
 on:
   schedule:
-    # Daily at 16:00 PM Eastern (20:00 UTC)
+    # Daily at 16:00 PM Eastern (20:00 UTC) - same time as D-1
     - cron: '0 20 * * *'
   workflow_dispatch: # Allow manual trigger for testing
 
 jobs:
-  d1-alert:
+  d2-alert:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -27,12 +27,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       
-      - name: Send D-1 alert
+      - name: Send D-2 alert
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          python opex_alerts.py --alert-type d1 --frequency medium
+          python opex_alerts.py --alert-type d2 --frequency medium
       
       - name: Log completion
         if: always()
-        run: echo "D-1 alert workflow completed at $(date)"
+        run: echo "D-2 alert workflow completed at $(date)"
